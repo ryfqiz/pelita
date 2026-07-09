@@ -4,6 +4,7 @@
 //  intervention form, authority reset, counseling log
 // ============================================================
 
+import 'dart:ui';
 import 'package:flutter/material.dart';
 import '../../core/app_state.dart';
 import '../../core/theme.dart';
@@ -24,7 +25,7 @@ class _BKDashboardScreenState extends State<BKDashboardScreen> {
 
   final List<Map<String, dynamic>> _studentQueue = [
     {
-      'name': 'Rifqi Pratama',
+      'name': 'Rifqi Zaki',
       'username': 'rifqi',
       'class': 'IX-A',
       'priority': 'high',
@@ -146,48 +147,82 @@ class _BKDashboardScreenState extends State<BKDashboardScreen> {
       child: Column(
         children: [
           Container(
-            color: PelitaTheme.darkTeal,
-            child: SafeArea(
-              bottom: false,
-              child: Column(
-                children: [
-                  Padding(
-                    padding:
-                        const EdgeInsets.fromLTRB(16, 8, 16, 0),
-                    child: Row(
+            decoration: const BoxDecoration(
+              gradient: LinearGradient(
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+                colors: [PelitaTheme.darkTeal, Color(0xFF1E5C58)],
+              ),
+              borderRadius: BorderRadius.only(
+                bottomLeft: Radius.circular(28),
+                bottomRight: Radius.circular(28),
+              ),
+            ),
+            child: ClipRRect(
+              borderRadius: const BorderRadius.only(
+                bottomLeft: Radius.circular(28),
+                bottomRight: Radius.circular(28),
+              ),
+              child: BackdropFilter(
+                filter: ImageFilter.blur(sigmaX: 8, sigmaY: 8),
+                child: Container(
+                  decoration: BoxDecoration(
+                    gradient: LinearGradient(
+                      begin: Alignment.topLeft,
+                      end: Alignment.bottomRight,
+                      colors: [
+                        PelitaTheme.sageGreen.withValues(alpha: 0.25),
+                        PelitaTheme.darkTeal.withValues(alpha: 0.05),
+                      ],
+                    ),
+                    border: Border(
+                      bottom: BorderSide(
+                        color: Colors.white.withValues(alpha: 0.35),
+                        width: 1,
+                      ),
+                    ),
+                  ),
+                  child: SafeArea(
+                    bottom: false,
+                    child: Column(
                       children: [
-                        const Text(
-                          '🛡️ Dashboard BK',
-                          style: TextStyle(
-                              color: Colors.white,
-                              fontWeight: FontWeight.w800,
-                              fontSize: 18),
-                        ),
-                        const Spacer(),
-                        IconButton(
-                          icon: const Icon(Icons.logout_rounded,
-                              color: Colors.white54),
-                          onPressed: () =>
-                              Navigator.pushReplacement(
-                            context,
-                            MaterialPageRoute(
-                                builder: (_) =>
-                                    const PelitaLoginScreen()),
+                        Padding(
+                          padding: const EdgeInsets.fromLTRB(16, 8, 16, 0),
+                          child: Row(
+                            children: [
+                              const Text(
+                                '🛡️ Dashboard BK',
+                                style: TextStyle(
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.w800,
+                                    fontSize: 18),
+                              ),
+                              const Spacer(),
+                              IconButton(
+                                icon: const Icon(Icons.logout_rounded,
+                                    color: Colors.white70),
+                                onPressed: () => Navigator.pushReplacement(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (_) => const PelitaLoginScreen()),
+                                ),
+                              ),
+                            ],
                           ),
+                        ),
+                        const TabBar(
+                          labelColor: Colors.white,
+                          unselectedLabelColor: Colors.white60,
+                          indicatorColor: PelitaTheme.orangeHighlight,
+                          tabs: [
+                            Tab(text: 'Antrean Siswa'),
+                            Tab(text: 'Panel Intervensi'),
+                          ],
                         ),
                       ],
                     ),
                   ),
-                  const TabBar(
-                    labelColor: Colors.white,
-                    unselectedLabelColor: Colors.white54,
-                    indicatorColor: PelitaTheme.orangeHighlight,
-                    tabs: [
-                      Tab(text: 'Antrean Siswa'),
-                      Tab(text: 'Panel Intervensi'),
-                    ],
-                  ),
-                ],
+                ),
               ),
             ),
           ),
@@ -207,7 +242,13 @@ class _BKDashboardScreenState extends State<BKDashboardScreen> {
   Widget _buildSidebar() {
     return Container(
       width: 240,
-      color: PelitaTheme.darkTeal,
+      decoration: const BoxDecoration(
+        gradient: LinearGradient(
+          begin: Alignment.topCenter,
+          end: Alignment.bottomCenter,
+          colors: [PelitaTheme.darkTeal, Color(0xFF164846)],
+        ),
+      ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -325,13 +366,14 @@ class _BKDashboardScreenState extends State<BKDashboardScreen> {
   }
 
   Widget _buildStudentQueuePanel() {
+    final isWide = MediaQuery.of(context).size.width > 900;
     return Container(
       color: Colors.white,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Padding(
-            padding: const EdgeInsets.fromLTRB(16, 48, 16, 12),
+            padding: EdgeInsets.fromLTRB(16, isWide ? 48 : 16, 16, 12),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -492,6 +534,7 @@ class _BKDashboardScreenState extends State<BKDashboardScreen> {
   }
 
   Widget _buildDetailPanel(BuildContext context) {
+    final isWide = MediaQuery.of(context).size.width > 900;
     final studentName = _studentQueue.firstWhere(
         (s) => s['username'] == _selectedStudent,
         orElse: () => _studentQueue[0])['name'];
@@ -507,8 +550,8 @@ class _BKDashboardScreenState extends State<BKDashboardScreen> {
         children: [
           // ── Top bar ──────────────────────────────
           Container(
-            padding: const EdgeInsets.fromLTRB(24, 48, 24, 16),
-            color: Colors.white,
+            padding: EdgeInsets.fromLTRB(24, isWide ? 48 : 16, 24, 8),
+            color: PelitaTheme.background,
             child: Row(
               children: [
                 Expanded(
@@ -640,9 +683,13 @@ class _BKDashboardScreenState extends State<BKDashboardScreen> {
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(20),
+        border: Border.all(
+          color: PelitaTheme.textDark.withValues(alpha: 0.08),
+          width: 1,
+        ),
         boxShadow: [
           BoxShadow(
-            color: PelitaTheme.textDark.withValues(alpha: 0.05),
+            color: PelitaTheme.textDark.withValues(alpha: 0.04),
             blurRadius: 12,
             offset: const Offset(0, 4),
           ),
@@ -660,7 +707,7 @@ class _BKDashboardScreenState extends State<BKDashboardScreen> {
           ),
           const SizedBox(height: 20),
           SizedBox(
-            height: 120,
+            height: 140,
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.end,
               children: List.generate(5, (i) {
@@ -733,11 +780,19 @@ class _BKDashboardScreenState extends State<BKDashboardScreen> {
     return Container(
       padding: const EdgeInsets.all(18),
       decoration: BoxDecoration(
-        color: PelitaTheme.honeyTint,
-        borderRadius: BorderRadius.circular(16),
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(20),
         border: Border.all(
-            color:
-                PelitaTheme.orangeHighlight.withValues(alpha: 0.3)),
+          color: PelitaTheme.textDark.withValues(alpha: 0.08),
+          width: 1,
+        ),
+        boxShadow: [
+          BoxShadow(
+            color: PelitaTheme.textDark.withValues(alpha: 0.04),
+            blurRadius: 12,
+            offset: const Offset(0, 4),
+          ),
+        ],
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,

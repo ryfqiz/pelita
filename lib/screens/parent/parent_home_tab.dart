@@ -3,6 +3,7 @@
 //  Parental monitoring portal: Live Sync Banner + Journal Feed
 // ============================================================
 
+import 'dart:ui';
 import 'package:flutter/material.dart';
 import '../../core/app_state.dart';
 import '../../core/theme.dart';
@@ -120,65 +121,96 @@ class _ParentHomeTabState extends State<ParentHomeTab> {
 
   Widget _buildParentHeader() {
     return Container(
-      padding: const EdgeInsets.fromLTRB(24, 56, 24, 28),
       decoration: const BoxDecoration(
-        color: PelitaTheme.darkTeal,
+        gradient: LinearGradient(
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+          colors: [PelitaTheme.darkTeal, Color(0xFF1E5C58)],
+        ),
         borderRadius: BorderRadius.only(
-          bottomLeft: Radius.circular(32),
-          bottomRight: Radius.circular(32),
+          bottomLeft: Radius.circular(28),
+          bottomRight: Radius.circular(28),
         ),
       ),
-      child: Row(
-        children: [
-          Container(
-            width: 52,
-            height: 52,
+      child: ClipRRect(
+        borderRadius: const BorderRadius.only(
+          bottomLeft: Radius.circular(28),
+          bottomRight: Radius.circular(28),
+        ),
+        child: BackdropFilter(
+          filter: ImageFilter.blur(sigmaX: 8, sigmaY: 8),
+          child: Container(
+            padding: const EdgeInsets.fromLTRB(24, 56, 24, 28),
             decoration: BoxDecoration(
-              color: Colors.white.withValues(alpha: 0.15),
-              shape: BoxShape.circle,
-            ),
-            child: const Center(
-                child: Text('👨‍👩‍👦',
-                    style: TextStyle(fontSize: 26))),
-          ),
-          const SizedBox(width: 14),
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              const Text(
-                'Portal Orang Tua',
-                style: TextStyle(
-                  color: Colors.white,
-                  fontWeight: FontWeight.w900,
-                  fontSize: 18,
+              gradient: LinearGradient(
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+                colors: [
+                  PelitaTheme.sageGreen.withValues(alpha: 0.25),
+                  PelitaTheme.darkTeal.withValues(alpha: 0.05),
+                ],
+              ),
+              border: Border(
+                bottom: BorderSide(
+                  color: Colors.white.withValues(alpha: 0.35),
+                  width: 1,
                 ),
               ),
-              Text(
-                'Pemantauan Rifqi Pratama',
-                style: TextStyle(
-                  color: Colors.white.withValues(alpha: 0.7),
-                  fontSize: 13,
+            ),
+            child: Row(
+              children: [
+                Container(
+                  width: 52,
+                  height: 52,
+                  decoration: BoxDecoration(
+                    color: Colors.white.withValues(alpha: 0.15),
+                    shape: BoxShape.circle,
+                  ),
+                  child: const Center(
+                      child: Text('👨‍👩‍👦',
+                          style: TextStyle(fontSize: 26))),
                 ),
-              ),
-            ],
-          ),
-          const Spacer(),
-          Container(
-            padding:
-                const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
-            decoration: BoxDecoration(
-              color: PelitaTheme.sageGreen.withValues(alpha: 0.3),
-              borderRadius: BorderRadius.circular(10),
+                const SizedBox(width: 14),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const Text(
+                      'Portal Orang Tua',
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontWeight: FontWeight.w900,
+                        fontSize: 18,
+                      ),
+                    ),
+                    Text(
+                      'Pemantauan Rifqi Zaki',
+                      style: TextStyle(
+                        color: Colors.white.withValues(alpha: 0.75),
+                        fontSize: 13,
+                      ),
+                    ),
+                  ],
+                ),
+                const Spacer(),
+                Container(
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+                  decoration: BoxDecoration(
+                    color: PelitaTheme.sageGreen.withValues(alpha: 0.3),
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  child: const Text(
+                    '🔴 LIVE',
+                    style: TextStyle(
+                        color: Colors.white,
+                        fontWeight: FontWeight.w700,
+                        fontSize: 12),
+                  ),
+                ),
+              ],
             ),
-            child: const Text(
-              '🔴 LIVE',
-              style: TextStyle(
-                  color: Colors.white,
-                  fontWeight: FontWeight.w700,
-                  fontSize: 12),
-            ),
           ),
-        ],
+        ),
       ),
     );
   }
@@ -188,102 +220,114 @@ class _ParentHomeTabState extends State<ParentHomeTab> {
     final isDistress = state == CahayaState.distress;
     final isCemas = state == CahayaState.cemas;
 
-    final Color bannerBg;
-    final Color borderColor;
     final String icon;
     final String message;
 
     if (isDistress) {
-      bannerBg = PelitaTheme.coralRed.withValues(alpha: 0.15);
-      borderColor = PelitaTheme.coralRed.withValues(alpha: 0.4);
       icon = '🚨';
       message =
           'PERINGATAN: Sinyal distress terdeteksi dari aktivitas Rifqi. Intervensi segera diperlukan.';
     } else if (isCemas) {
-      bannerBg = PelitaTheme.softYellow.withValues(alpha: 0.4);
-      borderColor =
-          PelitaTheme.orangeHighlight.withValues(alpha: 0.4);
       icon = '⚠️';
       message =
           'Rifqi menunjukkan sedikit kecemasan. Pantau dan berikan dukungan ringan.';
     } else {
-      bannerBg = PelitaTheme.sageGreen.withValues(alpha: 0.1);
-      borderColor = PelitaTheme.sageGreen.withValues(alpha: 0.35);
       icon = '✅';
       message =
           'Lentera Rifqi terpantau Stabil. Tidak ada anomali atau sinyal distress parah dalam obrolan 7 hari terakhir.';
     }
 
     return Container(
-      padding: const EdgeInsets.all(18),
       decoration: BoxDecoration(
-        color: bannerBg,
-        borderRadius: BorderRadius.circular(18),
-        border: Border.all(color: borderColor, width: 1.5),
+        borderRadius: BorderRadius.circular(24),
+        gradient: LinearGradient(
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+          colors: [
+            PelitaTheme.sageGreen.withValues(alpha: 0.25),
+            PelitaTheme.darkTeal.withValues(alpha: 0.05),
+          ],
+        ),
       ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            children: [
-              Text(icon, style: const TextStyle(fontSize: 22)),
-              const SizedBox(width: 10),
-              const Expanded(
-                child: Text(
-                  'Live Sync — Status Rifqi',
-                  style: TextStyle(
-                      fontWeight: FontWeight.w800,
-                      color: PelitaTheme.textDark,
-                      fontSize: 14),
-                ),
-              ),
-            ],
-          ),
-          const SizedBox(height: 8),
-          Text(
-            message,
-            style: TextStyle(
-                fontSize: 13,
-                color: PelitaTheme.textDark.withValues(alpha: 0.75)),
-          ),
-          if (isDistress) ...[
-            const SizedBox(height: 12),
-            SizedBox(
-              width: double.infinity,
-              child: ElevatedButton.icon(
-                onPressed: () {
-                  showDialog(
-                    context: ctx,
-                    builder: (_) => AlertDialog(
-                      shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(20)),
-                      title: const Text('Rujukan Puskesmas 📍'),
-                      content: const Text(
-                          'Tombol ini mensimulasikan pengiriman rujukan darurat ke Puskesmas terdekat. Dalam sistem produksi, ini terhubung ke API layanan kesehatan setempat.'),
-                      actions: [
-                        TextButton(
-                            onPressed: () => Navigator.pop(ctx),
-                            child: const Text('Tutup')),
-                        ElevatedButton(
-                            onPressed: () => Navigator.pop(ctx),
-                            child: const Text('Kirim Rujukan')),
-                      ],
-                    ),
-                  );
-                },
-                icon: const Icon(Icons.local_hospital_rounded,
-                    size: 18),
-                label: const Text('Rujuk ke Puskesmas Terdekat'),
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: PelitaTheme.coralRed,
-                  shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(12)),
-                  padding: const EdgeInsets.symmetric(vertical: 12),
-                ),
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(24),
+        child: BackdropFilter(
+          filter: ImageFilter.blur(sigmaX: 8, sigmaY: 8),
+          child: Container(
+            padding: const EdgeInsets.all(18),
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(24),
+              border: Border.all(
+                color: Colors.white.withValues(alpha: 0.35),
+                width: 1,
               ),
             ),
-          ],
-        ],
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  children: [
+                    Text(icon, style: const TextStyle(fontSize: 22)),
+                    const SizedBox(width: 10),
+                    const Expanded(
+                      child: Text(
+                        'Live Sync — Status Rifqi',
+                        style: TextStyle(
+                            fontWeight: FontWeight.w800,
+                            color: PelitaTheme.textDark,
+                            fontSize: 14),
+                      ),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 8),
+                Text(
+                  message,
+                  style: TextStyle(
+                      fontSize: 13,
+                      color: PelitaTheme.textDark.withValues(alpha: 0.75)),
+                ),
+                if (isDistress) ...[
+                  const SizedBox(height: 12),
+                  SizedBox(
+                    width: double.infinity,
+                    child: ElevatedButton.icon(
+                      onPressed: () {
+                        showDialog(
+                          context: ctx,
+                          builder: (_) => AlertDialog(
+                            shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(20)),
+                            title: const Text('Rujukan Puskesmas 📍'),
+                            content: const Text(
+                                'Tombol ini mensimulasikan pengiriman rujukan darurat ke Puskesmas terdekat. Dalam sistem produksi, ini terhubung ke API layanan kesehatan setempat.'),
+                            actions: [
+                              TextButton(
+                                  onPressed: () => Navigator.pop(ctx),
+                                  child: const Text('Tutup')),
+                              ElevatedButton(
+                                  onPressed: () => Navigator.pop(ctx),
+                                  child: const Text('Kirim Rujukan')),
+                            ],
+                          ),
+                        );
+                      },
+                      icon: const Icon(Icons.local_hospital_rounded,
+                          size: 18),
+                      label: const Text('Rujuk ke Puskesmas Terdekat'),
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: PelitaTheme.coralRed,
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(12)),
+                        padding: const EdgeInsets.symmetric(vertical: 12),
+                      ),
+                    ),
+                  ),
+                ],
+              ],
+            ),
+          ),
+        ),
       ),
     );
   }

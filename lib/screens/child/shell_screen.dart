@@ -86,16 +86,18 @@ class _PelitaShellScreenState extends State<PelitaShellScreen> {
           ),
 
           // ── Floating SOS button ──────────────────────
-          floatingActionButton: FloatingActionButton.extended(
-            heroTag: 'sos_fab',
-            onPressed: () => _showSOSDialog(context),
-            backgroundColor: PelitaTheme.coralRed,
-            icon: const Icon(Icons.warning_amber_rounded,
-                color: Colors.white),
-            label: const Text('SOS',
-                style: TextStyle(
-                    color: Colors.white, fontWeight: FontWeight.w800)),
-          ),
+          floatingActionButton: _tabIndex == 1
+              ? null
+              : FloatingActionButton.extended(
+                  heroTag: 'sos_fab',
+                  onPressed: () => _showSOSDialog(context),
+                  backgroundColor: PelitaTheme.coralRed,
+                  icon: const Icon(Icons.warning_amber_rounded,
+                      color: Colors.white),
+                  label: const Text('SOS',
+                      style: TextStyle(
+                          color: Colors.white, fontWeight: FontWeight.w800)),
+                ),
         );
       },
     );
